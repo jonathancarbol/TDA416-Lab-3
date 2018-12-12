@@ -1,20 +1,39 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class CompDijkstraPath<E extends Edge> implements Comparable{
+public class CompDijkstraPath<E extends Edge> implements Comparable<E> {
 
-    private final int start;
-    private final int end;
-    private List<Integer> global;
+    private final int to;
+    private int cost;
+    private List<E> path;
 
-    public CompDijkstraPath(int start, int to, int noOfNodes) {
-        this.start = start;
-        this.end = to;
-        this.global = new ArrayList<>();
+    public CompDijkstraPath(int to, int cost, List<E> path) {
+        this.to = to;
+        this.cost = cost;
+        this.path = path;
     }
 
+
+    @Override
     public int compareTo(E e) {
-        if ()
+        if (this.cost <= e.getWeight()){
+            return -1;
+        }else {
+            return 1;
+        }
+    }
+
+    public int getTo() {
+        return to;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public List<E> getPath() {
+        return path;
     }
 }
