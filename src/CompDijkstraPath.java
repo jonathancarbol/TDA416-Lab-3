@@ -3,13 +3,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class CompDijkstraPath<E extends Edge> implements Comparable<E> {
+public class CompDijkstraPath<E extends Edge> implements Comparable<CompDijkstraPath<E>> {
 
     private final int to;
-    private int cost;
+    private double cost;
     private List<E> path;
 
-    public CompDijkstraPath(int to, int cost, List<E> path) {
+    public CompDijkstraPath(int to, double cost, List<E> path) {
         this.to = to;
         this.cost = cost;
         this.path = path;
@@ -17,8 +17,8 @@ public class CompDijkstraPath<E extends Edge> implements Comparable<E> {
 
 
     @Override
-    public int compareTo(E e) {
-        if (this.cost <= e.getWeight()){
+    public int compareTo(CompDijkstraPath e) {
+        if (this.cost <= e.getCost()){
             return -1;
         }else {
             return 1;
@@ -29,7 +29,7 @@ public class CompDijkstraPath<E extends Edge> implements Comparable<E> {
         return to;
     }
 
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 
