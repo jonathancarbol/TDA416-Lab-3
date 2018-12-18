@@ -67,7 +67,7 @@ public class DirectedGraph<E extends Edge> {
     public Iterator<E> minimumSpanningTree() {
         List[] cc = new List[noOfNodes];
         for (int i = 0; i < cc.length; i++){
-            cc[i] = new ArrayList<CompKruskalEdge>();
+            cc[i] = new ArrayList<BusEdge>();
         }
 
         PriorityQueue<CompKruskalEdge> pq = new PriorityQueue<>();
@@ -84,7 +84,7 @@ public class DirectedGraph<E extends Edge> {
             Edge e = pq.remove().getBedge();
 
 
-            if ( cc[e.from]!= cc[e.to]){
+            if ( cc[e.from] != cc[e.to]){
                 if (cc[e.from].size() >= cc[e.to].size()){
                     large = e.from;
                     small = e.to;
@@ -98,7 +98,12 @@ public class DirectedGraph<E extends Edge> {
                     }
                 }
                 cc[large].add(e);
-                cc[small] = cc[large];
+
+                for (int i = 0; i < cc[large].size(); i++){
+                    BusEdge b = (BusEdge) cc[large].get(i);
+                    cc[b.from] = cc[large];
+                    cc[b.to] = cc[large];
+                }
             }
         }
 
