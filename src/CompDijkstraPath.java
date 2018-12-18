@@ -19,10 +19,11 @@ public class CompDijkstraPath<E extends Edge> implements Comparable<CompDijkstra
     @Override
     public int compareTo(CompDijkstraPath e) {
         if (this.cost <= e.getCost()){
-            return -1;
-        }else {
-            return 1;
+            if(this.getPath().size()<= e.getPath().size()) {
+                return -1;
+            }
         }
+        return 1;
     }
 
     public int getTo() {

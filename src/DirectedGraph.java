@@ -65,8 +65,44 @@ public class DirectedGraph<E extends Edge> {
     }
 
     public Iterator<E> minimumSpanningTree() {
+        List[] cc = new List[noOfNodes];
+        for (int i = 0; i < cc.length; i++){
+            cc[i] = new ArrayList<CompKruskalEdge>();
+        }
 
-        return null;
+        PriorityQueue<CompKruskalEdge> pq = new PriorityQueue<>();
+        for (int i = 0; i < edgeList.length; i++){
+            for (int j = 0; j < edgeList[i].size(); j++){
+                E be = edgeList[i].get(j);
+                pq.add(new CompKruskalEdge(be));
+            }
+        }
+
+        int large;
+        int small;
+        while (!pq.isEmpty() && cc.length > 0){
+            Edge e = pq.remove().getBedge();
+
+
+            if ( cc[e.from]!= cc[e.to]){
+                if (cc[e.from].size() >= cc[e.to].size()){
+                    large = e.from;
+                    small = e.to;
+                }else {
+                    large = e.to;
+                    small = e.from;
+                }
+                if(cc[small].size() > 0) {
+                    for (int i = 0; i < cc[small].size(); i++) {
+                        cc[large].add(cc[small].get(i));
+                    }
+                }
+                cc[large].add(e);
+                cc[small] = cc[large];
+            }
+        }
+
+        return cc[0].iterator();
     }
 
 }
