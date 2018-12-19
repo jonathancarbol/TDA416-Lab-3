@@ -6,17 +6,36 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 
+
+/**
+ * Directed graph - En klass för bestämning av den kortarste vägen melland två hållplatser och det minsta uppspännande
+ * träd.
+ * @param <E> som är en generic som extendar Edge.
+ *
+ * @author Jonathan Carbol & Maria Fornmark
+ * @version 1.0
+ */
 public class DirectedGraph<E extends Edge> {
 
     private List<E>[] edgeList;
     private int noOfNodes;
 
 
+    /**
+     * Konstruktorn för klassen som har antal hållplatser som input. Den skapar samtidigt en tom list av samma storlek
+     * som antal hållplatser.
+     * @param noOfNodes - antal hållplatser eller noder i inputen.
+     */
     public DirectedGraph(int noOfNodes) {
         this.noOfNodes = noOfNodes;
         this.edgeList = new List[noOfNodes];
     }
 
+    /**
+     * Metod för tillägning av bågar till DirectedGraph. Tar in alla bågar som används för bestämning av kortaste vägen
+     * och MST.
+     * @param e - bågen som ska läggas till.
+     */
     public void addEdge(E e) {
         if (edgeList[e.from] == null) {
             edgeList[e.from] = new ArrayList<E>();
@@ -25,10 +44,15 @@ public class DirectedGraph<E extends Edge> {
 
     }
 
+    /**
+     * Metod för bestämning av kortaste vägen mellan två hållplatser. Använder Dijkstras algoritm för att bestämma detta.
+     * @param from - Bågens starthållplats.
+     * @param to - Bågens ändhållplats.
+     * @return En iterator med kortaste vägen.
+     */
     public Iterator<E> shortestPath(int from, int to) {
         PriorityQueue<CompDijkstraPath> pq = new PriorityQueue<>();
         boolean[] visited = new boolean[noOfNodes];
-        int inf = 1000;
 
         pq.add(new CompDijkstraPath(from, 0, null));
         while (!pq.isEmpty()) {
@@ -40,9 +64,8 @@ public class DirectedGraph<E extends Edge> {
                     visited[current.getTo()] = true;
 
                     for (int i = 0; i < edgeList[current.getTo()].size(); i++) {
-                        E edge = edgeList[current.getTo()].get(i); //x.get(i) är en busedge;
+                        E edge = edgeList[current.getTo()].get(i);
                         double cost = current.getCost() + edge.getWeight();
-
 
                         List<E> path = new ArrayList();
                         if (current.getPath() != null) {
@@ -50,12 +73,10 @@ public class DirectedGraph<E extends Edge> {
                             for(E e : tmp){
                                 path.add(e);
                             }
-                            //path = current.getPath();
                         }
-                        path.add(edge); //Vad ska läggas till? HUr när och varför?
+                        path.add(edge);
 
-
-                        CompDijkstraPath cdp = new CompDijkstraPath(edge.to, cost, path); //Är det edge.to?
+                        CompDijkstraPath cdp = new CompDijkstraPath(edge.to, cost, path);
                         pq.add(cdp);
                     }
                 }
@@ -64,6 +85,10 @@ public class DirectedGraph<E extends Edge> {
         return null;
     }
 
+    /**
+     * En metod för bestämning av minsta uppspända trädet för alla hållplatser. Använder Kruskals algoritm med listor.
+     * @return En lista med alla noder i MST:n.
+     */
     public Iterator<E> minimumSpanningTree() {
         List[] cc = new List[noOfNodes];
         for (int i = 0; i < cc.length; i++){
@@ -82,7 +107,6 @@ public class DirectedGraph<E extends Edge> {
         int small;
         while (!pq.isEmpty() && cc.length > 0){
             Edge e = pq.remove().getBedge();
-
 
             if ( cc[e.from] != cc[e.to]){
                 if (cc[e.from].size() >= cc[e.to].size()){
@@ -106,9 +130,7 @@ public class DirectedGraph<E extends Edge> {
                 }
             }
         }
-
         return cc[0].iterator();
     }
-
 }
   
